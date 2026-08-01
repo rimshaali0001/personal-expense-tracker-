@@ -5,7 +5,6 @@ A desktop application for tracking personal expenses, built with Java and MongoD
 ## Features
 - Add, view, and categorize personal expenses
 - Data persistence using MongoDB
-- (add any others: filtering by date, monthly summaries, etc.)
 
 ## Tech Stack
 - Java
@@ -14,9 +13,13 @@ A desktop application for tracking personal expenses, built with Java and MongoD
 ## How to Run
 1. Clone the repo
 2. Set up a local/cloud MongoDB instance
-3. (Add your actual run steps — e.g. import into IntelliJ/Eclipse, configure DB connection string, run Main.java)
+3. Open the project in your IDE (e.g. IntelliJ IDEA or Eclipse)
+4. Configure your MongoDB connection string in `MongoDBConnection.java`
+5. Run `ExpenseTrackerApp.java`
 
 ## What I'd Improve
-- (e.g. add a GUI, add data validation, add unit tests)
+- Add a graphical user interface
+- Add input validation and error handling
+- Add unit tests
 
-Developed by Rimsha Ali — ADBMS course project.
+Developed by Rimsha Ali (ADBMS course project).
