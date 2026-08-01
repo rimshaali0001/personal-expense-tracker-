@@ -2,6 +2,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class ExpenseTrackerApp {
     private static Scanner input = new Scanner(System.in);
@@ -48,6 +49,9 @@ public class ExpenseTrackerApp {
         System.out.println("0. Exit");
     }
 
+    // Builds a Transaction object first, then converts it into a MongoDB
+    // Document so the two classes actually work together instead of
+    // the app writing raw Documents directly.
     private static void addTransaction() {
         System.out.print("Type (Income/Expense): ");
         String type = input.nextLine();
@@ -59,11 +63,13 @@ public class ExpenseTrackerApp {
         System.out.print("Description: ");
         String description = input.nextLine();
 
-        Document doc = new Document("type", type)
-                .append("category", category)
-                .append("amount", amount)
-                .append("date", date)
-                .append("description", description);
+        Transaction transaction = new Transaction(type, category, amount, date, description);
+
+        Document doc = new Document("type", transaction.getType())
+                .append("category", transaction.getCategory())
+                .append("amount", transaction.getAmount())
+                .append("date", transaction.getDate())
+                .append("description", transaction.getDescription());
 
         transactions.insertOne(doc);
         System.out.println("Transaction saved successfully.");
@@ -120,17 +126,35 @@ public class ExpenseTrackerApp {
                 + " | Description: " + doc.getString("description"));
     }
 
+    // Loops until a valid integer is entered instead of crashing the
+    // program when the user accidentally types letters or symbols.
     private static int readInt(String message) {
-        System.out.print(message);
-        int value = input.nextInt();
-        input.nextLine();
-        return value;
+        while (true) {
+            try {
+                System.out.print(message);
+                int value = input.nextInt();
+                input.nextLine();
+                return value;
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid number.");
+                input.nextLine();
+            }
+        }
     }
 
+    // Same idea as readInt() but for decimal amounts, since Scanner
+    // throws an exception instead of returning a default value.
     private static double readDouble(String message) {
-        System.out.print(message);
-        double value = input.nextDouble();
-        input.nextLine();
-        return value;
+        while (true) {
+            try {
+                System.out.print(message);
+                double value = input.nextDouble();
+                input.nextLine();
+                return value;
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid amount.");
+                input.nextLine();
+            }
+        }
     }
 }
